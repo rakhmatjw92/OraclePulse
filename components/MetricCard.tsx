@@ -8,14 +8,15 @@ interface MetricCardProps {
   // This ensures that only valid elements are passed and allows React.cloneElement to be used without type errors.
   icon: React.ReactElement;
   children?: React.ReactNode;
+  color?: string;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit, icon, children }) => {
+const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit, icon, children, color = '#ef4444' }) => {
   return (
-    <div className="bg-gray-900/50 border border-red-500/20 p-4 rounded-lg shadow-lg shadow-red-900/20 backdrop-blur-sm transition-all duration-300 hover:border-red-500/50 hover:shadow-red-500/20">
+    <div className="bg-gray-900/50 border p-4 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-lg" style={{ borderColor: `${color}33`, boxShadow: `0 10px 15px -3px ${color}33` }}>
       <div className="flex items-start justify-between">
         <div className="flex flex-col">
-          <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider">{title}</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color }}>{title}</h3>
           {children ? (
              <div className="mt-2 h-16 w-full">{children}</div>
           ) : (
@@ -25,7 +26,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit, icon, child
             </div>
           )}
         </div>
-        <div className="text-red-500 bg-red-900/30 p-2 rounded-full">
+        <div className="p-2 rounded-full" style={{ backgroundColor: `${color}4D`, color }}>
           {React.cloneElement(icon, { className: 'w-6 h-6' })}
         </div>
       </div>

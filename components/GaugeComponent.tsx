@@ -4,9 +4,10 @@ import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis } from '
 
 interface GaugeComponentProps {
   value: number;
+  color?: string;
 }
 
-const GaugeComponent: React.FC<GaugeComponentProps> = ({ value }) => {
+const GaugeComponent: React.FC<GaugeComponentProps> = ({ value, color = '#ef4444' }) => {
   const data = [{ name: 'Tablespace', value }];
   const roundedValue = Math.round(value);
 
@@ -31,10 +32,10 @@ const GaugeComponent: React.FC<GaugeComponentProps> = ({ value }) => {
             background
             dataKey="value"
             angleAxisId={0}
-            fill="#ef4444"
+            fill={color}
             cornerRadius={5}
             // @ts-ignore
-            background={{ fill: 'rgba(239, 68, 68, 0.2)' }}
+            background={{ fill: `${color}33` }}
           />
         </RadialBarChart>
       </ResponsiveContainer>

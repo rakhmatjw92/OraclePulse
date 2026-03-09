@@ -6,6 +6,17 @@ export interface ConnectionDetails {
   user: string;
 }
 
+export interface Session {
+  id: string;
+  details: ConnectionDetails;
+  color: string;
+}
+
+export interface SavedConnection extends ConnectionDetails {
+  id: string;
+  name: string;
+}
+
 export interface TimeSeriesData {
   time: string;
   value: number;

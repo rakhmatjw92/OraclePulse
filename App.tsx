@@ -3,18 +3,49 @@ import React, { useState } from 'react';
 import ConnectionModal from './components/ConnectionModal';
 import Dashboard from './components/Dashboard';
 import Header from './components/Header';
-import type { ConnectionDetails } from './types';
+import type { ConnectionDetails, Session } from './types';
+
+const SESSION_COLORS = [
+  '#ef4444', // red
+  '#3b82f6', // blue
+  '#10b981', // emerald
+  '#f59e0b', // amber
+  '#8b5cf6', // violet
+  '#ec4899', // pink
+  '#06b6d4', // cyan
+];
 
 const App: React.FC = () => {
-  const [connection, setConnection] = useState<ConnectionDetails | null>(null);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
 
   const handleConnect = (details: ConnectionDetails) => {
-    setConnection(details);
+    const newSession: Session = {
+      id: Math.random().toString(36).substring(2, 9),
+      details,
+      color: SESSION_COLORS[sessions.length % SESSION_COLORS.length],
+    };
+    setSessions([...sessions, newSession]);
+    setActiveSessionId(newSession.id);
   };
 
-  const handleDisconnect = () => {
-    setConnection(null);
+  const handleSessionSelect = (id: string) => {
+    setActiveSessionId(id);
   };
+
+  const handleNewSession = () => {
+    setActiveSessionId(null);
+  };
+
+  const handleCloseSession = (id: string) => {
+    const updatedSessions = sessions.filter(s => s.id !== id);
+    setSessions(updatedSessions);
+    if (activeSessionId === id) {
+      setActiveSessionId(updatedSessions.length > 0 ? updatedSessions[updatedSessions.length - 1].id : null);
+    }
+  };
+
+  const activeSession = sessions.find(s => s.id === activeSessionId);
 
   return (
     <div className="bg-black min-h-screen text-gray-200 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
@@ -23,16 +54,18 @@ const App: React.FC = () => {
       
       <div className="relative z-10 flex flex-col h-full">
         <Header 
-          isConnected={!!connection} 
-          connectionDetails={connection} 
-          onDisconnect={handleDisconnect} 
+          sessions={sessions}
+          activeSessionId={activeSessionId}
+          onSessionSelect={handleSessionSelect}
+          onNewSession={handleNewSession}
+          onCloseSession={handleCloseSession}
         />
         <main className="flex-grow mt-6">
-          {!connection ? (
+          {!activeSessionId ? (
             <ConnectionModal onConnect={handleConnect} />
-          ) : (
-            <Dashboard />
-          )}
+          ) : activeSession ? (
+            <Dashboard key={activeSession.id} session={activeSession} />
+          ) : null}
         </main>
       </div>
     </div>

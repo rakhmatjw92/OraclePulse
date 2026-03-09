@@ -6,14 +6,19 @@ import ChartComponent from './ChartComponent';
 import TopSqlQueries from './TopSqlQueries';
 import GaugeComponent from './GaugeComponent';
 import { ActivityIcon, ClockIcon, CpuIcon, HardDriveIcon } from '../constants';
+import type { Session } from '../types';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  session: Session;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ session }) => {
   const metrics = useMockData();
 
   if (!metrics) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-2xl font-orbitron animate-pulse text-red-500">Initializing Data Stream...</div>
+        <div className="text-2xl font-orbitron animate-pulse" style={{ color: session.color }}>Initializing Data Stream...</div>
       </div>
     );
   }
@@ -22,11 +27,11 @@ const Dashboard: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fadeIn">
       <div className="md:col-span-2 lg:col-span-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard title="DB Time" value={metrics.dbTime.toFixed(2)} unit="s" icon={<ClockIcon />} />
-          <MetricCard title="Memory Usage" value={metrics.memoryUsage.toFixed(2)} unit="%" icon={<CpuIcon />} />
-          <MetricCard title="Active Sessions" value={metrics.activeSessions[metrics.activeSessions.length - 1]?.value.toString() ?? '0'} icon={<ActivityIcon />} />
-          <MetricCard title="Tablespace" value="" icon={<HardDriveIcon />}>
-            <GaugeComponent value={metrics.tablespaceUsed} />
+          <MetricCard title="DB Time" value={metrics.dbTime.toFixed(2)} unit="s" icon={<ClockIcon />} color={session.color} />
+          <MetricCard title="Memory Usage" value={metrics.memoryUsage.toFixed(2)} unit="%" icon={<CpuIcon />} color={session.color} />
+          <MetricCard title="Active Sessions" value={metrics.activeSessions[metrics.activeSessions.length - 1]?.value.toString() ?? '0'} icon={<ActivityIcon />} color={session.color} />
+          <MetricCard title="Tablespace" value="" icon={<HardDriveIcon />} color={session.color}>
+            <GaugeComponent value={metrics.tablespaceUsed} color={session.color} />
           </MetricCard>
         </div>
       </div>
@@ -36,7 +41,7 @@ const Dashboard: React.FC = () => {
           data={metrics.cpuUsage} 
           title="CPU Usage (%)" 
           dataKey="value" 
-          color="#ef4444" 
+          color={session.color} 
         />
       </div>
 
@@ -45,12 +50,12 @@ const Dashboard: React.FC = () => {
           data={metrics.activeSessions} 
           title="Active Sessions" 
           dataKey="value" 
-          color="#f87171" 
+          color={session.color} 
         />
       </div>
 
       <div className="md:col-span-2 lg:col-span-4">
-        <TopSqlQueries queries={metrics.topSql} />
+        <TopSqlQueries queries={metrics.topSql} color={session.color} />
       </div>
     </div>
   );
