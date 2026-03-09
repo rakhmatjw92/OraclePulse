@@ -1,0 +1,5 @@
+{
+  "name": "Oracle Pulse",
+  "description": "A futuristic monitoring dashboard for Oracle database performance, featuring real-time metrics visualization and connection configuration. The UI is themed with a striking red, white, and black color palette.",
+  "requestFramePermissions": []
+}
